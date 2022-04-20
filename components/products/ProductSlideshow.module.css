@@ -1,0 +1,7 @@
+.each-slide > div{
+    display: flex;
+    justify-content: center;
+    background-position: center;
+    background-size: contain;
+    height: 650px;
+}
