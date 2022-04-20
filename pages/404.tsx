@@ -25,7 +25,7 @@ const Custom404 = () => {
                 fontWeight={500}
                 marginLeft={2}
             >
-                Maybe page doesn't exist anymore
+                Maybe page doesn&apos;t exist anymore
             </Typography>
         </Box>
     </ShopLayout>
