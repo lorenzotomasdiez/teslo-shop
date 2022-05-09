@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { FC, ReactNode, useEffect, useReducer} from 'react';
 import { tesloApi } from '../../api';
@@ -24,12 +25,21 @@ interface Props{
 export const AuthProvider:FC<Props> = ({children}) => {
     const router = useRouter();
     const [state, dispatch] = useReducer(authReducer, Auth_INITIAL_STATE);
+    const {data, status} = useSession();
 
     useEffect(() => {
-      checkTocken();
-    }, [])
+      if(status === 'authenticated'){
+        console.log(data?.user)
+        dispatch({type:'[Auth] - Login', payload: data?.user as IUser});
+      }
+    }, [data, status])
     
-    const checkTocken = async () => {
+
+    /* useEffect(() => {
+      checkTocken();
+    }, []) */
+    
+    /* const checkTocken = async () => {
         if(!Cookies.get('token')){
             return
         }
@@ -42,7 +52,7 @@ export const AuthProvider:FC<Props> = ({children}) => {
         } catch (error) {
             Cookies.remove('token');
         }
-    }
+    } */
 
     const loginUser = async(email: string, password: string):Promise<boolean> => {
         try {
@@ -84,9 +94,19 @@ export const AuthProvider:FC<Props> = ({children}) => {
     }
 
     const logout = () => {
-        Cookies.remove('token');
         Cookies.remove('cart');
-        router.reload()
+        Cookies.remove('firstName');
+        Cookies.remove('lastName');
+        Cookies.remove('address');
+        Cookies.remove('zip');
+        Cookies.remove('city');
+        Cookies.remove('country');
+        Cookies.remove('phone');
+
+        signOut();
+        //router.reload()
+        //Cookies.remove('token');
+        
     }
 
     return (
