@@ -69,7 +69,7 @@ export const AuthProvider:FC<Props> = ({children}) => {
     const registerUser = async(name:string, email:string, password:string)
         :Promise<{hasError: boolean, message?:string}> => {
         try {
-            const {data} = await tesloApi.post('/user/login', {email, password});
+            const {data} = await tesloApi.post('/user/register', {email,password,name});
             const {token, user} = data;
             Cookies.set('token', token);
             dispatch({type:'[Auth] - Login', payload:user});

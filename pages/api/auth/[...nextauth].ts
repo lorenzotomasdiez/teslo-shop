@@ -22,6 +22,16 @@ export default NextAuth({
             }
         })
     ],
+    //CUSTOM PAGES
+    pages:{
+        signIn: '/auth/login',
+        newUser: '/auth/register'
+    },
+    session:{
+        maxAge:2592000,
+        strategy:'jwt',
+        updateAge:8600,
+    },
     //CALLBACKS
     jwt:{
         //secret:process.env.JWT_SECRET_SEED

@@ -1,10 +1,11 @@
 import { ErrorOutline } from '@mui/icons-material'
+import { GetServerSideProps } from 'next'
 import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material'
+import { getSession, signIn } from 'next-auth/react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { tesloApi } from '../../api'
 import { AuthLayout } from '../../components/layouts'
 import { AuthContext } from '../../context'
 import { validations } from '../../utils'
@@ -33,8 +34,9 @@ const RegisterPage = () => {
         }, 3000)
         return
     }
-
-    router.replace('/');
+    /* 
+    router.replace('/'); */
+    await signIn('credentials',{email, password});
   }
   return (
     <AuthLayout title={'Ingresar'}>
@@ -121,6 +123,29 @@ const RegisterPage = () => {
         </form>
     </AuthLayout>
   )
+}
+
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
+
+
+export const getServerSideProps: GetServerSideProps = async ({req, query}) => {
+    const session = await getSession({req});
+    const {p = '/'} = query;
+    if(session){
+        return{
+            redirect:{
+                destination:p.toString(),
+                permanent:false
+            }
+        }
+    }
+
+    return {
+        props: {
+            
+        }
+    }
 }
 
 export default RegisterPage
